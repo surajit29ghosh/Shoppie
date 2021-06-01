@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      containers:
+      - name: ecom-api-gateway
+        image: ecom-api-gateway:v0.0.1
+        env:
+        - name: "HostName"
+          value: "http://localhost"
+        - name: "ProductApiPort"
+          value: "30091"
+        - name: "CartApiPort"
+          value: "30092"
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  apigateway-service
+spec:
+  selector:
+    app:  apigateway
+  type: NodePort
+  ports:
+  - port:  80
+    nodePort: 30001
+  

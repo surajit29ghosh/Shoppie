@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ecomapi-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+  - host: "api.app.internal"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/api/product/*"
+        backend:
+          serviceName: productapi-service
+          servicePort: 80
+      - pathType: Prefix
+        path: "/api/cart/*"
+        backend:
+          serviceName: cartapi-service
+          servicePort: 80
+---

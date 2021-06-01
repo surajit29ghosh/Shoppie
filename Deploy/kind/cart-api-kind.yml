@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cartapi
+  template:
+    metadata:
+      labels:
+        app: cartapi
+    spec:
+      containers:
+      - name: cart-api-container
+        image: ecom-cart-api:v0.0.1
+        env:
+        - name: "AllowedOrigins"
+          value: "http://local.web.app"
+        - name: "SQLConnection"
+          value: "Server=host.docker.internal;Database=eCommerce;User Id=sa;Password=sa@123;"
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  cartapi-service
+spec:
+  selector:
+    app:  cartapi
+  ports:
+  - port:  80
+  

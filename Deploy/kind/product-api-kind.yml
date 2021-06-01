@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productapi
+  template:
+    metadata:
+      labels:
+        app: productapi
+    spec:
+      containers:
+      - name: ecom-product-api
+        image: ecom-product-api:v0.0.1
+        env:
+        - name: "AllowedOrigins"
+          value: "http://web.app.internal"
+        - name: "SQLConnection"
+          value: "Server=host.docker.internal;Database=eCommerce;User Id=sa;Password=sa@123;"
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  productapi-service
+spec:
+  selector:
+    app:  productapi
+  type: NodePort
+  ports:
+  - port:  80
+    nodePort: 30091
+  

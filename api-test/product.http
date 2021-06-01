@@ -1,0 +1,4 @@
+GET http://localhost:30091/api/product/all
+
+GET http://local.api.app/api/product/all
+

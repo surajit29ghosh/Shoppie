@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+      - name: product-service-container
+        image: ecom-product-api:v0.0.1
+        env:
+        - name: "AllowedOrigins"
+          value: "http://192.168.0.133:31000"
+        - name: "SQLConnection"
+          value: "Server=192.168.0.122\\SQLEXPRESS,49172;Database=eCommerce;User Id=sa;Password=Pass@123;"
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  product-service
+spec:
+  selector:
+    app:  product-service
+  type:  NodePort
+  ports:
+  - protocol: TCP
+    port:  80
+    targetPort:  80
+    nodePort: 31101
